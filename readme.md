@@ -12,6 +12,5 @@ Dataset: https://www.kaggle.com/frtgnn/rock-paper-scissor
 ```bash
 poetry install
 cd data
-kaggle datasets download -d frtgnn/rock-paper-scissor
-unzip rock-paper-scissor.zip
+kaggle datasets download --unzip frtgnn/rock-paper-scissor
 ```
