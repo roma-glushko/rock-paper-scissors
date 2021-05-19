@@ -27,4 +27,4 @@ def get_model(feature_extractor_type: str, num_classes: int, image_size=Tuple[in
 
     activations = Dense(units=num_classes, activation='softmax')(image_features)
 
-    return Model(image_input, activations)
+    return Model(image_input, activations, name="rock_paper_scissors_model")

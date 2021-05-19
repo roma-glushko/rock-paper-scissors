@@ -1,4 +1,5 @@
 import os
+import pickle
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
@@ -70,7 +71,7 @@ def train(config: ConfigManager) -> None:
     validation_steps = 504 // config.batch_size
 
     model_saver = ModelCheckpoint(
-        filepath='logs/checkpoints/rps-val_acc_{val_accuracy:.5f}'+ f'-{config.feature_extractor}-seed_{config.seed}' + '-va_loss_{loss:.5f}-epoch_{epoch}.h5',
+        filepath='logs/checkpoints/rps-val_acc_{val_accuracy:.5f}' + f'-{config.feature_extractor}-seed_{config.seed}' + '-val_loss_{loss:.5f}-epoch_{epoch}.h5',
         mode='max',
         monitor='val_accuracy',
         save_best_only=True,
@@ -87,10 +88,12 @@ def train(config: ConfigManager) -> None:
         callbacks=[
             model_saver,
             early_stopping,
-            # model_checkpoint_callback,
         ],
         verbose=1
     )
+
+    with open('./logs/training_history.pkl', 'wb') as f:
+        pickle.dump(training_history, f)
 
 
 if __name__ == "__main__":

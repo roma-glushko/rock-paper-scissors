@@ -506,7 +506,7 @@ python-dateutil = ">=2.1"
 
 [[package]]
 name = "morty"
-version = "0.2.0.dev0"
+version = "0.2.3.dev0"
 description = "TBU"
 category = "main"
 optional = false
@@ -1202,7 +1202,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8b440a3e560e795ca4dc06cb58afe4b7e4813e619d2d919f81791f95a30e6dac"
+content-hash = "604bd03c81ebcef49f86d6c095825e1c50405e858c39596c1a2259b6918b12fb"
 
 [metadata.files]
 absl-py = [
@@ -1511,8 +1511,8 @@ matplotlib = [
     {file = "matplotlib-3.3.4.tar.gz", hash = "sha256:3e477db76c22929e4c6876c44f88d790aacdf3c3f8f3a90cb1975c0bf37825b0"},
 ]
 morty = [
-    {file = "morty-0.2.0.dev0-py3-none-any.whl", hash = "sha256:e9afbcc05f0181d4d18e6ef519d670936b2c806fa8076460e2264eec15a07e1f"},
-    {file = "morty-0.2.0.dev0.tar.gz", hash = "sha256:3283a707603a467557a194fe9ff50c9e7e1220e50169b5aa3e82290e3f674837"},
+    {file = "morty-0.2.3.dev0-py3-none-any.whl", hash = "sha256:7745fa8a7e71d1e5862d25f604200fb44023d5e22ea7c6dd81c63fcdab44c8d2"},
+    {file = "morty-0.2.3.dev0.tar.gz", hash = "sha256:8927fe5b86fd7f04e5b4a3f3e2b13d01e4587c227060992e1b1a30c9dd097efd"},
 ]
 networkx = [
     {file = "networkx-2.5.1-py3-none-any.whl", hash = "sha256:0635858ed7e989f4c574c2328380b452df892ae85084144c73d8cd819f0c4e06"},

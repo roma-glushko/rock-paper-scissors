@@ -14,3 +14,9 @@ poetry install
 cd data
 kaggle datasets download --unzip frtgnn/rock-paper-scissor
 ```
+
+## References
+
+- https://keras.io/guides/transfer_learning/
+- https://www.tensorflow.org/tutorials/images/transfer_learning
+- https://ruder.io/transfer-learning/

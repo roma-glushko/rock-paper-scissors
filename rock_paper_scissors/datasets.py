@@ -40,8 +40,6 @@ def get_dataset(
         seed=seed,
     )
 
-    # https://www.tensorflow.org/tutorials/images/transfer_learning
-
     return dataset \
         .map(augmentation_func, num_parallel_calls=AUTOTUNE) \
         .prefetch(AUTOTUNE)
