@@ -1,6 +1,5 @@
 from typing import Tuple
 
-import tensorflow as tf
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Input, Dropout, Dense
 from tensorflow.keras.layers.experimental.preprocessing import Rescaling
