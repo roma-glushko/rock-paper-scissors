@@ -8,8 +8,8 @@ from tensorflow.python.keras.preprocessing.image_dataset import image_dataset_fr
 
 
 def augment_image(inputs, labels, augmentation_pipeline):
-    def apply_augmentation(image):
-        aug_data = augmentation_pipeline(image=image)
+    def apply_augmentation(images):
+        aug_data = augmentation_pipeline(image=images)
         return aug_data['image']
 
     inputs = tf.numpy_function(func=apply_augmentation, inp=[inputs], Tout=tf.float32)
@@ -36,12 +36,14 @@ def get_dataset(
         subset=subset_type,
         validation_split=validation_fraction,
         image_size=image_size,
+        batch_size=batch_size,
         seed=seed,
     )
 
+    # https://www.tensorflow.org/tutorials/images/transfer_learning
+
     return dataset \
         .map(augmentation_func, num_parallel_calls=AUTOTUNE) \
-        .batch(batch_size) \
         .prefetch(AUTOTUNE)
 
 
@@ -59,11 +61,11 @@ def get_test_dataset(
 
     dataset = image_dataset_from_directory(
         dataset_path,
+        batch_size=batch_size,
         image_size=image_size,
         seed=seed,
     )
 
     return dataset \
         .map(augmentation_func, num_parallel_calls=AUTOTUNE) \
-        .batch(batch_size) \
         .prefetch(AUTOTUNE)

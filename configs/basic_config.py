@@ -6,27 +6,16 @@ args = {
     'train_dataset_path': 'data/rps/rps/',
     'test_dataset_path': 'data/rps-test-set/rps-test-set/',
     'image_size': (300, 300),
+    'num_classes': 3,  # adds one more class for noise
 
+    'epochs': 20,
     'batch_size': 32,
+    'learning_rate': 0.001,
+    'feature_extractor': 'MobileNetV2',
 }
 
-args['train_augmentation'] = a.Compose([
-    a.Normalize(
-        mean=[0.485, 0.456, 0.406],
-        std=[0.229, 0.224, 0.225],
-    ),
-])
+args['train_augmentation'] = a.Compose([])
 
-args['validation_augmentation'] = a.Compose([
-    a.Normalize(
-        mean=[0.485, 0.456, 0.406],
-        std=[0.229, 0.224, 0.225],
-    ),
-])
+args['validation_augmentation'] = a.Compose([])
 
-args['test_augmentation'] = a.Compose([
-    a.Normalize(
-        mean=[0.485, 0.456, 0.406],
-        std=[0.229, 0.224, 0.225],
-    ),
-])
+args['test_augmentation'] = a.Compose([])
