@@ -20,3 +20,4 @@ kaggle datasets download --unzip frtgnn/rock-paper-scissor
 - https://keras.io/guides/transfer_learning/
 - https://www.tensorflow.org/tutorials/images/transfer_learning
 - https://ruder.io/transfer-learning/
+- http://www.laurencemoroney.com/rock-paper-scissors-dataset/
