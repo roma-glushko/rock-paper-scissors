@@ -8,18 +8,19 @@ args = {
     'image_size': (300, 300),
     'num_classes': 3,  # adds one more class for noise
 
-    'epochs': 20,
+    'epochs': 30,
     'batch_size': 32,
     'learning_rate': 0.001,
     'feature_extractor': 'MobileNetV2',
 }
 
 args['train_augmentation'] = a.Compose([
-    a.VerticalFlip(p=0.5),
-    a.HorizontalFlip(p=0.5),
-    a.RandomBrightness(limit=0.1),
-    # a.JpegCompression(quality_lower=85, quality_upper=100, p=0.5),
-    a.HueSaturationValue(p=0.5, hue_shift_limit=(-20, 20), sat_shift_limit=(-30, 30), val_shift_limit=(-20, 20))
+    a.VerticalFlip(),
+    a.HorizontalFlip(),
+    a.RandomBrightness(limit=0.2, p=0.5),
+    a.CoarseDropout(p=0.5, max_holes=20, max_height=8, max_width=8, min_holes=10, min_height=8, min_width=8),
+    a.GaussNoise(p=1.0, var_limit=(10.0, 50.0)),
+    # a.MotionBlur(p=1.0, blur_limit=(3, 7)),
 ])
 
 args['validation_augmentation'] = a.Compose([

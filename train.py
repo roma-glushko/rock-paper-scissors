@@ -20,7 +20,7 @@ print('TF:', tf.__version__)
 print('Num GPUs Available: ', len(tf.config.list_physical_devices('GPU')))
 
 early_stopping = EarlyStopping(
-    patience=10,
+    patience=5,
     min_delta=0.001,
     restore_best_weights=True,
 )

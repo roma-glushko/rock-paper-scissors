@@ -9,10 +9,11 @@ from tensorflow.python.keras.preprocessing.image_dataset import image_dataset_fr
 
 def augment_image(inputs, labels, augmentation_pipeline):
     def apply_augmentation(images):
+        images = images.astype('uint8')
         aug_data = augmentation_pipeline(image=images)
         return aug_data['image']
 
-    inputs = tf.numpy_function(func=apply_augmentation, inp=[inputs], Tout=tf.float32)
+    inputs = tf.numpy_function(func=apply_augmentation, inp=[inputs], Tout=tf.uint8)
 
     return inputs, labels
 
