@@ -6,9 +6,9 @@ args = {
     'train_dataset_path': 'data/rps/rps/',
     'test_dataset_path': 'data/rps-test-set/rps-test-set/',
     'image_size': (300, 300),
-    'num_classes': 3,  # adds one more class for noise
+    'num_classes': 4,
 
-    'epochs': 30,
+    'epochs': 100,
     'batch_size': 32,
     'learning_rate': 0.001,
     'feature_extractor': 'MobileNetV2',
@@ -17,8 +17,9 @@ args = {
 args['train_augmentation'] = a.Compose([
     a.VerticalFlip(),
     a.HorizontalFlip(),
-    a.RandomBrightness(limit=0.2, p=0.5),
-    a.CoarseDropout(p=0.5, max_holes=20, max_height=8, max_width=8, min_holes=10, min_height=8, min_width=8),
+    # a.RandomBrightness(limit=0.2),
+    a.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.1, brightness_by_max=False),
+    a.CoarseDropout(max_holes=20, max_height=8, max_width=8, min_holes=10, min_height=8, min_width=8),
     a.GaussNoise(p=1.0, var_limit=(10.0, 50.0)),
     # a.MotionBlur(p=1.0, blur_limit=(3, 7)),
 ])

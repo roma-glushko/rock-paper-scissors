@@ -3,13 +3,15 @@ import os
 from tensorflow.python.keras.preprocessing.image_dataset import image_dataset_from_directory
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ['TF_DETERMINISTIC_OPS'] = '1'
+os.environ['TF_CUDNN_DETERMINISTIC'] = '1'
 
 import tensorflow as tf
 
 from morty.config import ConfigManager, main, get_arg_parser
 from morty.experiment import set_random_seed
 
-from rock_paper_scissors import get_model, get_test_dataset
+from rock_paper_scissors import get_model
 
 # TF setup
 tf.get_logger().setLevel('ERROR')
@@ -32,7 +34,7 @@ arg_parser.add_argument(
     "--img_dir_path",
     "-d",
     help="""Path to images that should be used in predictions""",
-    required=True,
+    default='./data/webcam/',
 )
 
 

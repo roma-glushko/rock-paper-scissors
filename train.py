@@ -2,6 +2,8 @@ import os
 import pickle
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ['TF_DETERMINISTIC_OPS'] = '1'
+os.environ['TF_CUDNN_DETERMINISTIC'] = '1'
 
 import tensorflow as tf
 from tensorflow.python.keras.callbacks import ModelCheckpoint, EarlyStopping
@@ -16,11 +18,14 @@ tf.get_logger().setLevel('ERROR')
 gpus = tf.config.experimental.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(gpus[0], True)
 
+# tf.config.threading.set_inter_op_parallelism_threads(1)
+# tf.config.threading.set_intra_op_parallelism_threads(1)
+
 print('TF:', tf.__version__)
 print('Num GPUs Available: ', len(tf.config.list_physical_devices('GPU')))
 
 early_stopping = EarlyStopping(
-    patience=5,
+    patience=10,
     min_delta=0.001,
     restore_best_weights=True,
 )

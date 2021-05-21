@@ -1,6 +1,8 @@
 import os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ['TF_DETERMINISTIC_OPS'] = '1'
+os.environ['TF_CUDNN_DETERMINISTIC'] = '1'
 
 import tensorflow as tf
 
@@ -23,6 +25,14 @@ arg_parser.add_argument(
     "--checkpoint_path",
     "-chkp",
     help="""Path to model checkpoint to evaluate""",
+    required=True,
+)
+
+arg_parser.add_argument(
+    "--test_dataset_path",
+    "--dataset",
+    help="""Path to test dataset""",
+    default='./data/webcam/'
 )
 
 

@@ -6,6 +6,13 @@ import tensorflow as tf
 from tensorflow.python.data import AUTOTUNE
 from tensorflow.python.keras.preprocessing.image_dataset import image_dataset_from_directory
 
+class_names = [
+    'rock',
+    'paper',
+    'scissors',
+    'noise',
+]
+
 
 def augment_image(inputs, labels, augmentation_pipeline):
     def apply_augmentation(images):
@@ -35,6 +42,7 @@ def get_dataset(
     dataset = image_dataset_from_directory(
         dataset_path,
         subset=subset_type,
+        class_names=class_names,
         validation_split=validation_fraction,
         image_size=image_size,
         batch_size=batch_size,
@@ -60,6 +68,7 @@ def get_test_dataset(
 
     dataset = image_dataset_from_directory(
         dataset_path,
+        class_names=class_names,
         batch_size=batch_size,
         image_size=image_size,
         seed=seed,

@@ -1,5 +1,7 @@
 import cv2
 
+device = cv2.CAP_OPENNI
+
 cam = cv2.VideoCapture(0)
 
 img_counter = 0
@@ -15,6 +17,9 @@ while True:
         print("failed to grab frame")
         break
 
+    frame = cv2.flip(frame, 1)
+    frame = cv2.resize(frame, (300, 300))
+
     cv2.imshow("Webcam Steam", frame)
 
     k = cv2.waitKey(1)
@@ -26,10 +31,9 @@ while True:
 
     elif k % 256 == 32:
         # SPACE pressed
-        img_name = "data/webcam/img_{}.png".format(img_counter)
+        img_name = "data/webcam/scissors/img_{}.png".format(img_counter)
 
-        image = cv2.resize(frame, (300, 300))
-        cv2.imwrite(img_name, image)
+        cv2.imwrite(img_name, frame)
 
         print("{} saved".format(img_name))
         img_counter += 1
