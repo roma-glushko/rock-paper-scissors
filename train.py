@@ -11,15 +11,15 @@ from tensorflow.python.keras.callbacks import ModelCheckpoint, EarlyStopping
 from morty.config import ConfigManager, main
 from morty.experiment import set_random_seed
 
+import wandb
+from wandb.keras import WandbCallback
+
 from rock_paper_scissors import get_dataset, get_model
 
 # TF setup
 tf.get_logger().setLevel('ERROR')
 gpus = tf.config.experimental.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(gpus[0], True)
-
-# tf.config.threading.set_inter_op_parallelism_threads(1)
-# tf.config.threading.set_intra_op_parallelism_threads(1)
 
 print('TF:', tf.__version__)
 print('Num GPUs Available: ', len(tf.config.list_physical_devices('GPU')))
@@ -34,6 +34,8 @@ early_stopping = EarlyStopping(
 @main(config_path='configs', config_name='basic_config')
 def train(config: ConfigManager) -> None:
     set_random_seed(config.seed)
+
+    wandb.init(project='rock-paper-scissors', entity='roma-glushko', config=config)
 
     train_dataset = get_dataset(
         config.train_dataset_path,
@@ -93,6 +95,7 @@ def train(config: ConfigManager) -> None:
         callbacks=[
             model_saver,
             early_stopping,
+            WandbCallback()
         ],
         verbose=1
     )
