@@ -10,14 +10,12 @@ class_names = [
     'rock',
     'paper',
     'scissors',
-    'noise',
 ]
 
 
-def augment_image(inputs, labels, augmentation_pipeline):
+def augment_image(inputs, labels, augmentation_pipeline: a.Compose):
     def apply_augmentation(images):
-        images = images.astype('uint8')
-        aug_data = augmentation_pipeline(image=images)
+        aug_data = augmentation_pipeline(image=images.astype('uint8'))
         return aug_data['image']
 
     inputs = tf.numpy_function(func=apply_augmentation, inp=[inputs], Tout=tf.uint8)
@@ -36,7 +34,7 @@ def get_dataset(
 ) -> tf.data.Dataset:
     augmentation_func = partial(
         augment_image,
-        augmentation_pipeline=augmentation_pipeline
+        augmentation_pipeline=augmentation_pipeline,
     )
 
     dataset = image_dataset_from_directory(
@@ -63,7 +61,7 @@ def get_test_dataset(
 ) -> tf.data.Dataset:
     augmentation_func = partial(
         augment_image,
-        augmentation_pipeline=augmentation_pipeline
+        augmentation_pipeline=augmentation_pipeline,
     )
 
     dataset = image_dataset_from_directory(

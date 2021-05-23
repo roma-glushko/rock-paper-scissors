@@ -1,5 +1,6 @@
 import os
 import pickle
+import random
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 os.environ['TF_DETERMINISTIC_OPS'] = '1'
@@ -33,6 +34,7 @@ early_stopping = EarlyStopping(
 
 @main(config_path='configs', config_name='basic_config')
 def train(config: ConfigManager) -> None:
+    random.seed(config.seed)
     set_random_seed(config.seed)
 
     wandb.init(project='rock-paper-scissors', entity='roma-glushko', config=config)
@@ -95,7 +97,7 @@ def train(config: ConfigManager) -> None:
         callbacks=[
             model_saver,
             early_stopping,
-            WandbCallback()
+            WandbCallback(training_data=train_dataset, log_weights=True, log_gradients=True, data_type='image')
         ],
         verbose=1
     )
