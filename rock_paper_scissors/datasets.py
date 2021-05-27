@@ -1,7 +1,10 @@
+import pickle
+import random
 from functools import partial
 from typing import Tuple
 
 import albumentations as a
+import numpy as np
 import tensorflow as tf
 from tensorflow.python.data import AUTOTUNE
 from tensorflow.python.keras.preprocessing.image_dataset import image_dataset_from_directory
@@ -12,10 +15,18 @@ class_names = [
     'scissors',
 ]
 
+import datetime
 
-def augment_image(inputs, labels, augmentation_pipeline: a.Compose):
+def augment_image(inputs, labels, augmentation_pipeline: a.Compose, seed: int = 42):
     def apply_augmentation(images):
+        random.seed(seed)
+        np.random.seed(seed)
+
         aug_data = augmentation_pipeline(image=images.astype('uint8'))
+
+        # with open(f'logs/debug/replay-{datetime.datetime.now().timestamp()}.pkl', 'wb') as outfile:
+        #     pickle.dump(aug_data['replay'], outfile)
+
         return aug_data['image']
 
     inputs = tf.numpy_function(func=apply_augmentation, inp=[inputs], Tout=tf.uint8)
@@ -35,6 +46,7 @@ def get_dataset(
     augmentation_func = partial(
         augment_image,
         augmentation_pipeline=augmentation_pipeline,
+        seed=seed,
     )
 
     dataset = image_dataset_from_directory(
@@ -62,6 +74,7 @@ def get_test_dataset(
     augmentation_func = partial(
         augment_image,
         augmentation_pipeline=augmentation_pipeline,
+        seed=seed,
     )
 
     dataset = image_dataset_from_directory(

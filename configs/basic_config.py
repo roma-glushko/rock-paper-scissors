@@ -8,13 +8,13 @@ args = {
     'image_size': (300, 300),
     'num_classes': 3,  # no noise class
 
-    'epochs': 100,
+    'epochs': 10,
     'batch_size': 32,
     'learning_rate': 0.001,
     'feature_extractor': 'MobileNetV2',
 }
 
-args['train_augmentation'] = a.Compose([
+args['train_augmentation'] = a.ReplayCompose([
     a.VerticalFlip(),
     a.HorizontalFlip(),
     # a.RandomBrightness(limit=0.2),
@@ -28,9 +28,6 @@ args['train_augmentation'] = a.Compose([
     # a.ISONoise(always_apply=False, p=1.0, intensity=(0.1, 0.5), color_shift=(0.01, 0.05)),
 ])
 
-args['validation_augmentation'] = a.Compose([
-    a.VerticalFlip(p=0.5),
-    a.HorizontalFlip(p=0.5),
-])
+args['validation_augmentation'] = a.Compose([])
 
 args['test_augmentation'] = a.Compose([])
