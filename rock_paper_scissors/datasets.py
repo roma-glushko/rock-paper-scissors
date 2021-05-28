@@ -15,19 +15,19 @@ class_names = [
     'scissors',
 ]
 
-import datetime
 
 def augment_image(inputs, labels, augmentation_pipeline: a.Compose, seed: int = 42):
     def apply_augmentation(images):
         random.seed(seed)
         np.random.seed(seed)
 
-        aug_data = augmentation_pipeline(image=images.astype('uint8'))
+        augmented_images = []
 
-        # with open(f'logs/debug/replay-{datetime.datetime.now().timestamp()}.pkl', 'wb') as outfile:
-        #     pickle.dump(aug_data['replay'], outfile)
+        for img in images:
+            aug_data = augmentation_pipeline(image=img.astype('uint8'))
+            augmented_images.append(aug_data['image'])
 
-        return aug_data['image']
+        return np.stack(augmented_images)
 
     inputs = tf.numpy_function(func=apply_augmentation, inp=[inputs], Tout=tf.uint8)
 

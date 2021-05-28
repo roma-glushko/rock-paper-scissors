@@ -103,7 +103,7 @@ def train(config: ConfigManager) -> None:
     )
 
     with open('./logs/training_history.pkl', 'wb') as f:
-        pickle.dump(training_history, f)
+        pickle.dump(training_history.history, f)
 
 
 if __name__ == "__main__":
