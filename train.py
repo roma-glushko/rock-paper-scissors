@@ -41,19 +41,15 @@ def train(config: ConfigManager) -> None:
 
     train_dataset = get_dataset(
         config.train_dataset_path,
-        'training',
         config.train_augmentation,
-        validation_fraction=0.2,
         batch_size=config.batch_size,
         image_size=config.image_size,
         seed=config.seed,
     )
 
     validation_dataset = get_dataset(
-        config.train_dataset_path,
-        'validation',
+        config.val_dataset_path,
         config.train_augmentation,
-        validation_fraction=0.2,
         batch_size=config.batch_size,
         image_size=config.image_size,
         seed=config.seed,

@@ -36,9 +36,7 @@ def augment_image(inputs, labels, augmentation_pipeline: a.Compose, seed: int = 
 
 def get_dataset(
         dataset_path: str,
-        subset_type: str,
         augmentation_pipeline: a.Compose,
-        validation_fraction: float = 0.2,
         batch_size: int = 32,
         image_size: Tuple[int, int] = (300, 300),
         seed: int = 42
@@ -51,9 +49,7 @@ def get_dataset(
 
     dataset = image_dataset_from_directory(
         dataset_path,
-        subset=subset_type,
         class_names=class_names,
-        validation_split=validation_fraction,
         image_size=image_size,
         batch_size=batch_size,
         seed=seed,

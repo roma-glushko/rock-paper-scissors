@@ -4,6 +4,7 @@ args = {
     'seed': 63815329,
 
     'train_dataset_path': 'data/rps/rps/',
+    'val_dataset_path': 'data/webcam_val/',
     'test_dataset_path': 'data/rps-test-set/rps-test-set/',
     'image_size': (300, 300),
     'num_classes': 3,  # no noise class
