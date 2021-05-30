@@ -3,13 +3,13 @@ import albumentations as a
 args = {
     'seed': 63815329,
 
-    'train_dataset_path': 'data/rps/rps/',
-    'val_dataset_path': 'data/webcam_val/',
-    'test_dataset_path': 'data/rps-test-set/rps-test-set/',
+    'train_dataset_path': 'data/rps-webcam-val-dataset/',  # 'data/rps/rps/',
+    'val_dataset_path': 'data/webcam/',  # 'data/webcam_val/', 'data/rps-test-set/rps-test-set/'
+    'test_dataset_path': 'data/webcam/',
     'image_size': (300, 300),
     'num_classes': 3,  # no noise class
 
-    'epochs': 10,
+    'epochs': 50,
     'batch_size': 32,
     'learning_rate': 0.001,
     'feature_extractor': 'MobileNetV2',
@@ -29,5 +29,3 @@ args['train_augmentation'] = a.Compose([
 ])
 
 args['validation_augmentation'] = a.Compose([])
-
-args['test_augmentation'] = a.Compose([])

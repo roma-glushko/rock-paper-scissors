@@ -1,7 +1,7 @@
-import pickle
+import os
 import random
 from functools import partial
-from typing import Tuple
+from typing import Tuple, Dict
 
 import albumentations as a
 import numpy as np
@@ -9,11 +9,27 @@ import tensorflow as tf
 from tensorflow.python.data import AUTOTUNE
 from tensorflow.python.keras.preprocessing.image_dataset import image_dataset_from_directory
 
-class_names = [
+class_names = (
     'rock',
     'paper',
     'scissors',
-]
+)
+
+
+def get_dataset_stats(dataset_path: str, image_pattern: str = '*.png') -> Dict:
+    total_samples = 0
+    dataset_stats = {}
+
+    for class_name in class_names:
+        images = tf.io.gfile.glob(os.path.join(dataset_path, class_name, image_pattern))
+        num_images = len(images)
+
+        dataset_stats[class_name] = num_images
+        total_samples += num_images
+
+    dataset_stats['total'] = total_samples
+
+    return dataset_stats
 
 
 def augment_image(inputs, labels, augmentation_pipeline: a.Compose, seed: int = 42):
@@ -57,30 +73,23 @@ def get_dataset(
 
     return dataset \
         .map(augmentation_func, num_parallel_calls=AUTOTUNE) \
+        .shuffle(buffer_size=512, seed=seed) \
         .prefetch(AUTOTUNE)
 
 
 def get_test_dataset(
         dataset_path: str,
-        augmentation_pipeline: a.Compose,
         batch_size: int = 32,
         image_size: Tuple[int, int] = (300, 300),
         seed: int = 42
 ) -> tf.data.Dataset:
-    augmentation_func = partial(
-        augment_image,
-        augmentation_pipeline=augmentation_pipeline,
-        seed=seed,
-    )
-
     dataset = image_dataset_from_directory(
         dataset_path,
         class_names=class_names,
         batch_size=batch_size,
         image_size=image_size,
+        shuffle=False,
         seed=seed,
     )
 
-    return dataset \
-        .map(augmentation_func, num_parallel_calls=AUTOTUNE) \
-        .prefetch(AUTOTUNE)
+    return dataset.prefetch(AUTOTUNE)

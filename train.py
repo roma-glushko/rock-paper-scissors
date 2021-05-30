@@ -15,7 +15,7 @@ from morty.experiment import set_random_seed
 import wandb
 from wandb.keras import WandbCallback
 
-from rock_paper_scissors import get_dataset, get_model
+from rock_paper_scissors import get_dataset, get_model, get_dataset_stats, get_test_dataset
 
 # TF setup
 tf.get_logger().setLevel('ERROR')
@@ -47,9 +47,8 @@ def train(config: ConfigManager) -> None:
         seed=config.seed,
     )
 
-    validation_dataset = get_dataset(
+    validation_dataset = get_test_dataset(
         config.val_dataset_path,
-        config.train_augmentation,
         batch_size=config.batch_size,
         image_size=config.image_size,
         seed=config.seed,
@@ -71,9 +70,11 @@ def train(config: ConfigManager) -> None:
 
     model.summary()
 
-    # todo: find a way to get dataset lengths
-    steps_per_epoch = 2016 // config.batch_size
-    validation_steps = 504 // config.batch_size
+    train_dataset_stats = get_dataset_stats(config.train_dataset_path)
+    val_dataset_stats = get_dataset_stats(config.val_dataset_path)
+
+    steps_per_epoch = train_dataset_stats['total'] // config.batch_size
+    validation_steps = val_dataset_stats['total'] // config.batch_size
 
     model_saver = ModelCheckpoint(
         filepath='logs/checkpoints/rps-val_acc_{val_accuracy:.5f}' + f'-{config.feature_extractor}-seed_{config.seed}' + '-val_loss_{loss:.5f}-epoch_{epoch}.h5',
