@@ -63,6 +63,7 @@ def get_dataset(
         augmentation_pipeline: a.Compose,
         batch_size: int = 32,
         image_size: Tuple[int, int] = (300, 300),
+        scaling: bool = True,
         seed: int = 42
 ) -> tf.data.Dataset:
     augmentation_func = partial(
@@ -79,9 +80,12 @@ def get_dataset(
         seed=seed,
     )
 
+    dataset = dataset.map(augmentation_func, num_parallel_calls=AUTOTUNE)
+
+    if scaling:
+        dataset = dataset.map(scale_images, num_parallel_calls=AUTOTUNE)
+
     return dataset \
-        .map(augmentation_func, num_parallel_calls=AUTOTUNE) \
-        .map(scale_images, num_parallel_calls=AUTOTUNE) \
         .shuffle(buffer_size=512, seed=seed) \
         .prefetch(AUTOTUNE)
 
@@ -90,6 +94,7 @@ def get_test_dataset(
         dataset_path: str,
         batch_size: int = 32,
         image_size: Tuple[int, int] = (300, 300),
+        scaling: bool = True,
         seed: int = 42
 ) -> tf.data.Dataset:
     dataset = image_dataset_from_directory(
@@ -101,6 +106,7 @@ def get_test_dataset(
         seed=seed,
     )
 
-    return dataset \
-        .map(scale_images, num_parallel_calls=AUTOTUNE) \
-        .prefetch(AUTOTUNE)
+    if scaling:
+        dataset = dataset.map(scale_images, num_parallel_calls=AUTOTUNE)
+
+    return dataset.prefetch(AUTOTUNE)
