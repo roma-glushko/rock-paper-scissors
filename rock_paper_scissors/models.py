@@ -1,5 +1,6 @@
 from typing import Tuple
 
+import tensorflow as tf
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Input, Dropout, Dense
 import tensorflow.keras.applications as feature_extractors
@@ -23,6 +24,9 @@ def get_model(feature_extractor_type: str, num_classes: int, image_size=Tuple[in
     image_features = feature_extractor(image_input, training=False)
     image_features = Dropout(0.5)(image_features)
 
-    activations = Dense(units=num_classes, activation='softmax')(image_features)
+    activations = Dense(
+        units=num_classes,
+        activation='softmax',
+    )(image_features)
 
     return Model(image_input, activations, name="rock_paper_scissors_model")

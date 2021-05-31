@@ -3,8 +3,8 @@ import albumentations as a
 args = {
     'seed': 63815329,
 
-    'train_dataset_path': 'data/rps-webcam-val-dataset/',  # 'data/rps/rps/',
-    'val_dataset_path': 'data/webcam/',  # 'data/webcam_val/', 'data/rps-test-set/rps-test-set/'
+    'train_dataset_path': 'data/full-rps-webcam-train-dataset/',  # 'data/rps/rps/',
+    'val_dataset_path': 'data/webcam_val/',  # 'data/webcam_val/', 'data/rps-test-set/rps-test-set/'
     'test_dataset_path': 'data/webcam_test/',
     'image_size': (300, 300),
     'num_classes': 3,  # no noise class
@@ -26,6 +26,5 @@ args['train_augmentation'] = a.Compose([
     a.CoarseDropout(p=0.8, max_holes=50, max_height=10, max_width=10, min_holes=20, min_height=8, min_width=8),
     a.ImageCompression(p=0.5, quality_lower=80, quality_upper=100, compression_type=0),
     a.ISONoise(p=1.0, intensity=(0.1, 0.5), color_shift=(0.01, 0.05)),
+    # a.InvertImg(p=0.4),
 ])
-
-args['validation_augmentation'] = a.Compose([])

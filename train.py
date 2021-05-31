@@ -2,6 +2,7 @@ import os
 import pickle
 import random
 
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 os.environ['TF_DETERMINISTIC_OPS'] = '1'
 os.environ['TF_CUDNN_DETERMINISTIC'] = '1'
@@ -94,7 +95,7 @@ def train(config: ConfigManager) -> None:
         callbacks=[
             model_saver,
             early_stopping,
-            WandbCallback(training_data=train_dataset, log_weights=True, log_gradients=True, data_type='image')
+            WandbCallback(training_data=train_dataset, log_weights=True, log_gradients=True, data_type='image'),
         ],
         verbose=1
     )
