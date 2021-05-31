@@ -7,6 +7,7 @@ import albumentations as a
 import numpy as np
 import tensorflow as tf
 from tensorflow.python.data import AUTOTUNE
+from tensorflow.python.keras.layers import Rescaling
 from tensorflow.python.keras.preprocessing.image_dataset import image_dataset_from_directory
 
 class_names = (
@@ -32,7 +33,7 @@ def get_dataset_stats(dataset_path: str, image_pattern: str = '*.png') -> Dict:
     return dataset_stats
 
 
-def augment_image(inputs, labels, augmentation_pipeline: a.Compose, seed: int = 42):
+def augment_image(inputs: tf.Tensor, labels: tf.Tensor, augmentation_pipeline: a.Compose, seed: int = 42):
     def apply_augmentation(images):
         random.seed(seed)
         np.random.seed(seed)
@@ -48,6 +49,13 @@ def augment_image(inputs, labels, augmentation_pipeline: a.Compose, seed: int = 
     inputs = tf.numpy_function(func=apply_augmentation, inp=[inputs], Tout=tf.uint8)
 
     return inputs, labels
+
+
+def scale_images(inputs: tf.Tensor, labels: tf.Tensor):
+    """
+    Scale image batch between [-1; 1]
+    """
+    return Rescaling(1. / 127.5, offset=-1)(inputs), labels
 
 
 def get_dataset(
@@ -73,6 +81,7 @@ def get_dataset(
 
     return dataset \
         .map(augmentation_func, num_parallel_calls=AUTOTUNE) \
+        .map(scale_images, num_parallel_calls=AUTOTUNE) \
         .shuffle(buffer_size=512, seed=seed) \
         .prefetch(AUTOTUNE)
 
@@ -92,4 +101,6 @@ def get_test_dataset(
         seed=seed,
     )
 
-    return dataset.prefetch(AUTOTUNE)
+    return dataset \
+        .map(scale_images, num_parallel_calls=AUTOTUNE) \
+        .prefetch(AUTOTUNE)

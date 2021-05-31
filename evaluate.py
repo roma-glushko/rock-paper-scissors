@@ -66,6 +66,8 @@ def evaluate(config: ConfigManager) -> None:
     print("Test Loss: {}".format(test_loss))
     print("Test Accuracy: {}".format(test_accuracy))
 
+    model.save(f'./logs/models/rps-test_acc_{test_accuracy}-test_loss_{test_loss}.h5', save_format='h5')
+
 
 if __name__ == "__main__":
     evaluate()
