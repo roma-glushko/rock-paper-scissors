@@ -16,7 +16,7 @@ from morty.experiment import set_random_seed
 import wandb
 from wandb.keras import WandbCallback
 
-from rock_paper_scissors import get_dataset, get_model, get_dataset_stats, get_test_dataset
+from rock_paper_scissors import get_dataset, get_model, get_dataset_stats, get_test_dataset, optimizer_factory
 
 # TF setup
 tf.get_logger().setLevel('ERROR')
@@ -61,7 +61,7 @@ def train(config: ConfigManager) -> None:
         config.image_size,
     )
 
-    optimizer = tf.keras.optimizers.Adam(learning_rate=config.learning_rate)
+    optimizer = optimizer_factory.get(config.optimizer)(**config.optimizer_config)
 
     model.compile(
         optimizer=optimizer,

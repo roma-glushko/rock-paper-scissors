@@ -1,9 +1,8 @@
 from typing import Tuple
 
-import tensorflow as tf
+import tensorflow.keras.applications as feature_extractors
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Input, Dropout, Dense
-import tensorflow.keras.applications as feature_extractors
 
 
 def get_model(feature_extractor_type: str, num_classes: int, image_size=Tuple[int, int]):

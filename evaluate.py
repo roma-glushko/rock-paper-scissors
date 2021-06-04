@@ -9,7 +9,7 @@ import tensorflow as tf
 from morty.config import ConfigManager, main, get_arg_parser
 from morty.experiment import set_random_seed
 
-from rock_paper_scissors import get_model, get_test_dataset, get_dataset_stats
+from rock_paper_scissors import get_model, get_test_dataset, get_dataset_stats, optimizer_factory
 
 # TF setup
 tf.get_logger().setLevel('ERROR')
@@ -52,7 +52,8 @@ def evaluate(config: ConfigManager) -> None:
 
     model.load_weights(config.checkpoint_path)
 
-    optimizer = tf.keras.optimizers.Adam(learning_rate=config.learning_rate)
+    optimizer = optimizer_factory.get(config.optimizer)(**config.optimizer_config)
+
     model.compile(
         optimizer=optimizer,
         loss='sparse_categorical_crossentropy',

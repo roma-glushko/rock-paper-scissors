@@ -11,8 +11,13 @@ args = {
 
     'epochs': 50,
     'batch_size': 32,
-    'learning_rate': 0.001,
+
     'feature_extractor': 'MobileNetV2',
+    'optimizer': 'adamw',
+    'optimizer_config': {
+        'learning_rate': 0.001,
+        'weight_decay': 0.001,
+    },
 }
 
 args['train_augmentation'] = a.Compose([
