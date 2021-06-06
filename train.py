@@ -79,7 +79,7 @@ def train(config: ConfigManager) -> None:
     validation_steps = val_dataset_stats['total'] // config.batch_size
 
     model_saver = ModelCheckpoint(
-        filepath='logs/checkpoints/rps-val_acc_{val_accuracy:.5f}' + f'-{config.feature_extractor}-seed_{config.seed}' + '-val_loss_{loss:.5f}-epoch_{epoch}.h5',
+        filepath='logs/checkpoints/rps-val_acc_{val_accuracy:.5f}' + f'-{config.feature_extractor}-seed_{config.seed}' + '-val_loss_{val_loss:.5f}-epoch_{epoch}.h5',
         mode='max',
         monitor='val_accuracy',
         save_best_only=True,
