@@ -1,0 +1,5 @@
+outs:
+- md5: eb7746d80c9f31988958b310f833b46d.dir
+  size: 78237430
+  nfiles: 540
+  path: webcam_test

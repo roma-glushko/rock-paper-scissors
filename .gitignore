@@ -4,6 +4,10 @@
 .venv
 *.pyc
 
-data
+data/*
+!data/webcam_train.dvc
+!data/webcam_val.dvc
+!data/webcam_test.dvc
+
 dist
 logs

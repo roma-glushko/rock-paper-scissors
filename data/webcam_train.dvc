@@ -1,0 +1,5 @@
+outs:
+- md5: 56a561601694827112b519024a84eeaa.dir
+  size: 160525449
+  nfiles: 1020
+  path: webcam_train

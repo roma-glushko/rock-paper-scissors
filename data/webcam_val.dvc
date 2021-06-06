@@ -1,0 +1,5 @@
+outs:
+- md5: a3028a72d69592b0f29eb2b454b8930f.dir
+  size: 129749804
+  nfiles: 804
+  path: webcam_val
