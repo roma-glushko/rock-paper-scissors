@@ -16,7 +16,7 @@ import wandb
 from wandb.keras import WandbCallback
 
 from rock_paper_scissors import get_dataset, get_model, get_dataset_stats, get_test_dataset, optimizer_factory, \
-    class_names
+    class_names, log_confusion_matrix
 
 # TF setup
 tf.get_logger().setLevel('ERROR')
@@ -111,10 +111,18 @@ def train(config: ConfigManager) -> None:
         seed=config.seed,
     )
 
+    # double check the best model
+    val_loss, val_accuracy = model.evaluate(validation_dataset)
+
+    print("Val Loss: {}".format(val_loss))
+    print("Val Accuracy: {}".format(val_accuracy))
+
     test_loss, test_accuracy = model.evaluate(test_dataset)
 
     wandb.log({'test_accuracy': test_accuracy})
     wandb.log({'test_loss': test_loss})
+
+    log_confusion_matrix('test_confusion_matrix', model, test_dataset)
 
 
 if __name__ == "__main__":
