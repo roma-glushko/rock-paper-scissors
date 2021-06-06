@@ -23,7 +23,7 @@ arg_parser = get_arg_parser()
 
 arg_parser.add_argument(
     "--checkpoint_path",
-    "-chkp",
+    "--chkp",
     help="""Path to model checkpoint to evaluate""",
     required=True,
 )
