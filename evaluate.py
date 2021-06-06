@@ -9,7 +9,7 @@ import tensorflow as tf
 from morty.config import ConfigManager, main, get_arg_parser
 from morty.experiment import set_random_seed
 
-from rock_paper_scissors import get_model, get_test_dataset
+from rock_paper_scissors import get_model, get_test_dataset, get_dataset_stats, optimizer_factory
 
 # TF setup
 tf.get_logger().setLevel('ERROR')
@@ -28,13 +28,6 @@ arg_parser.add_argument(
     required=True,
 )
 
-arg_parser.add_argument(
-    "--test_dataset_path",
-    "--dataset",
-    help="""Path to test dataset""",
-    default='./data/webcam/'
-)
-
 
 @main(config_path='configs', config_name='basic_config', argument_parser=arg_parser)
 def evaluate(config: ConfigManager) -> None:
@@ -44,21 +37,24 @@ def evaluate(config: ConfigManager) -> None:
 
     test_dataset = get_test_dataset(
         config.test_dataset_path,
-        config.test_augmentation,
         batch_size=config.batch_size,
         image_size=config.image_size,
         seed=config.seed,
     )
 
+    print('Test Dataset Stats: ', get_dataset_stats(config.test_dataset_path))
+
     model = get_model(
         config.feature_extractor,
         config.num_classes,
         config.image_size,
+        config.l2_strength,
     )
 
     model.load_weights(config.checkpoint_path)
 
-    optimizer = tf.keras.optimizers.Adam(learning_rate=config.learning_rate)
+    optimizer = optimizer_factory.get(config.optimizer)(**config.optimizer_config)
+
     model.compile(
         optimizer=optimizer,
         loss='sparse_categorical_crossentropy',
@@ -71,6 +67,8 @@ def evaluate(config: ConfigManager) -> None:
 
     print("Test Loss: {}".format(test_loss))
     print("Test Accuracy: {}".format(test_accuracy))
+
+    model.save(f'./logs/models/rps-test_acc_{test_accuracy}-test_loss_{test_loss}.h5', save_format='h5')
 
 
 if __name__ == "__main__":

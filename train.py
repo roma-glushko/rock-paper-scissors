@@ -15,7 +15,8 @@ from morty.experiment import set_random_seed
 import wandb
 from wandb.keras import WandbCallback
 
-from rock_paper_scissors import get_dataset, get_model
+from rock_paper_scissors import get_dataset, get_model, get_dataset_stats, get_test_dataset, optimizer_factory, \
+    class_names
 
 # TF setup
 tf.get_logger().setLevel('ERROR')
@@ -41,19 +42,14 @@ def train(config: ConfigManager) -> None:
 
     train_dataset = get_dataset(
         config.train_dataset_path,
-        'training',
         config.train_augmentation,
-        validation_fraction=0.2,
         batch_size=config.batch_size,
         image_size=config.image_size,
         seed=config.seed,
     )
 
-    validation_dataset = get_dataset(
-        config.train_dataset_path,
-        'validation',
-        config.train_augmentation,
-        validation_fraction=0.2,
+    validation_dataset = get_test_dataset(
+        config.val_dataset_path,
         batch_size=config.batch_size,
         image_size=config.image_size,
         seed=config.seed,
@@ -63,9 +59,10 @@ def train(config: ConfigManager) -> None:
         config.feature_extractor,
         config.num_classes,
         config.image_size,
+        config.l2_strength,
     )
 
-    optimizer = tf.keras.optimizers.Adam(learning_rate=config.learning_rate)
+    optimizer = optimizer_factory.get(config.optimizer)(**config.optimizer_config)
 
     model.compile(
         optimizer=optimizer,
@@ -75,9 +72,11 @@ def train(config: ConfigManager) -> None:
 
     model.summary()
 
-    # todo: find a way to get dataset lengths
-    steps_per_epoch = 2016 // config.batch_size
-    validation_steps = 504 // config.batch_size
+    train_dataset_stats = get_dataset_stats(config.train_dataset_path)
+    val_dataset_stats = get_dataset_stats(config.val_dataset_path)
+
+    steps_per_epoch = train_dataset_stats['total'] // config.batch_size
+    validation_steps = val_dataset_stats['total'] // config.batch_size
 
     model_saver = ModelCheckpoint(
         filepath='logs/checkpoints/rps-val_acc_{val_accuracy:.5f}' + f'-{config.feature_extractor}-seed_{config.seed}' + '-val_loss_{loss:.5f}-epoch_{epoch}.h5',
@@ -97,13 +96,25 @@ def train(config: ConfigManager) -> None:
         callbacks=[
             model_saver,
             early_stopping,
-            WandbCallback(training_data=train_dataset, log_weights=True, log_gradients=True, data_type='image')
+            WandbCallback(training_data=train_dataset, log_weights=True, log_gradients=True, data_type='image'),
         ],
         verbose=1
     )
 
     with open('./logs/training_history.pkl', 'wb') as f:
-        pickle.dump(training_history, f)
+        pickle.dump(training_history.history, f)
+
+    test_dataset = get_test_dataset(
+        config.test_dataset_path,
+        batch_size=config.batch_size,
+        image_size=config.image_size,
+        seed=config.seed,
+    )
+
+    test_loss, test_accuracy = model.evaluate(test_dataset)
+
+    wandb.log({'test_accuracy': test_accuracy})
+    wandb.log({'test_loss': test_loss})
 
 
 if __name__ == "__main__":

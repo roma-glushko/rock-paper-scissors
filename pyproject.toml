@@ -25,6 +25,10 @@ albumentations = "^0.5.2"
 jupyter = "^1.0.0"
 opencv-python = "^4.5.2"
 wandb = "^0.10.30"
+tensorflowjs = "^3.6.0"
+tf-explain = "^0.3.0"
+shap = "^0.39.0"
+tensorflow-addons = "^0.13.0"
 
 [tool.poetry.dev-dependencies]
 
