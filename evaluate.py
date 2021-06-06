@@ -48,6 +48,7 @@ def evaluate(config: ConfigManager) -> None:
         config.feature_extractor,
         config.num_classes,
         config.image_size,
+        config.l2_strength,
     )
 
     model.load_weights(config.checkpoint_path)

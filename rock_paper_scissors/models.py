@@ -2,10 +2,11 @@ from typing import Tuple
 
 import tensorflow.keras.applications as feature_extractors
 from tensorflow.keras import Model
+from tensorflow.keras.regularizers import l2
 from tensorflow.keras.layers import Input, Dropout, Dense
 
 
-def get_model(feature_extractor_type: str, num_classes: int, image_size=Tuple[int, int]):
+def get_model(feature_extractor_type: str, num_classes: int, image_size: Tuple[int, int], l2_strength: float):
     image_dim = (*image_size, 3)
     feature_extractor_model = getattr(feature_extractors, feature_extractor_type)
 
@@ -26,6 +27,7 @@ def get_model(feature_extractor_type: str, num_classes: int, image_size=Tuple[in
     activations = Dense(
         units=num_classes,
         activation='softmax',
+        kernel_regularizer=l2(l=l2_strength)
     )(image_features)
 
     return Model(image_input, activations, name="rock_paper_scissors_model")

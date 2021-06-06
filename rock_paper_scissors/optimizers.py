@@ -10,3 +10,5 @@ optimizer_factory.register('nadam', Nadam)
 optimizer_factory.register('adagrad', Adagrad)
 optimizer_factory.register('rmsprop', RMSprop)
 optimizer_factory.register('sgd', SGD)
+
+# todo: try to use SAM optimizer

@@ -13,10 +13,10 @@ args = {
     'batch_size': 32,
 
     'feature_extractor': 'MobileNetV2',
-    'optimizer': 'adamw',
+    'optimizer': 'rmsprop',
+    'l2_strength': 0.01,
     'optimizer_config': {
         'learning_rate': 0.001,
-        'weight_decay': 0.001,
     },
 }
 

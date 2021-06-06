@@ -2,7 +2,6 @@ import os
 import pickle
 import random
 
-
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 os.environ['TF_DETERMINISTIC_OPS'] = '1'
 os.environ['TF_CUDNN_DETERMINISTIC'] = '1'
@@ -16,7 +15,8 @@ from morty.experiment import set_random_seed
 import wandb
 from wandb.keras import WandbCallback
 
-from rock_paper_scissors import get_dataset, get_model, get_dataset_stats, get_test_dataset, optimizer_factory
+from rock_paper_scissors import get_dataset, get_model, get_dataset_stats, get_test_dataset, optimizer_factory, \
+    class_names
 
 # TF setup
 tf.get_logger().setLevel('ERROR')
@@ -59,6 +59,7 @@ def train(config: ConfigManager) -> None:
         config.feature_extractor,
         config.num_classes,
         config.image_size,
+        config.l2_strength,
     )
 
     optimizer = optimizer_factory.get(config.optimizer)(**config.optimizer_config)
@@ -102,6 +103,18 @@ def train(config: ConfigManager) -> None:
 
     with open('./logs/training_history.pkl', 'wb') as f:
         pickle.dump(training_history.history, f)
+
+    test_dataset = get_test_dataset(
+        config.test_dataset_path,
+        batch_size=config.batch_size,
+        image_size=config.image_size,
+        seed=config.seed,
+    )
+
+    test_loss, test_accuracy = model.evaluate(test_dataset)
+
+    wandb.log({'test_accuracy': test_accuracy})
+    wandb.log({'test_loss': test_loss})
 
 
 if __name__ == "__main__":
