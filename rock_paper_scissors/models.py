@@ -1,9 +1,9 @@
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
 import tensorflow.keras.applications as feature_extractors
 from tensorflow.keras import Model
+from tensorflow.keras.layers import Dense, Dropout, Input
 from tensorflow.keras.regularizers import l2
-from tensorflow.keras.layers import Input, Dropout, Dense
 
 
 def get_model(

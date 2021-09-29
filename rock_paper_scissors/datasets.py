@@ -1,14 +1,16 @@
 import os
 import random
 from functools import partial
-from typing import Tuple, Dict
+from typing import Dict, Tuple
 
 import albumentations as a
 import numpy as np
 import tensorflow as tf
 from tensorflow.python.data import AUTOTUNE
 from tensorflow.python.keras.layers import Rescaling
-from tensorflow.python.keras.preprocessing.image_dataset import image_dataset_from_directory
+from tensorflow.python.keras.preprocessing.image_dataset import (
+    image_dataset_from_directory,
+)
 
 class_names = (
     'rock',

@@ -1,7 +1,6 @@
-import wandb
-
 import numpy as np
 import tensorflow as tf
+import wandb
 from tensorflow.keras import Model
 
 from rock_paper_scissors import class_names

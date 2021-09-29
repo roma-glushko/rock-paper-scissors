@@ -14,6 +14,13 @@ poetry install
 cd data
 kaggle datasets download --unzip frtgnn/rock-paper-scissor
 ```
+## Modeling
+
+The best scores I was able to achieve with the following configs:
+
+- Fully Freezed MobileNetV2 + RMSProp + L2Regularization(0.01) - ?
+- Fully Freezed MobileNetV2 + AdamW(weight_decay: 0.01) - ?
+
 
 ## References
 

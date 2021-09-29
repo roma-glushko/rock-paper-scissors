@@ -13,10 +13,12 @@ args = {
     'batch_size': 32,
 
     'feature_extractor': 'MobileNetV2',
+    'unfreeze_at': 100,
     'optimizer': 'rmsprop',
     'l2_strength': 0.01,
+
     'optimizer_config': {
-        'learning_rate': 0.001,
+        'learning_rate': 0.0001,
     },
 }
 

@@ -5,11 +5,15 @@ os.environ['TF_DETERMINISTIC_OPS'] = '1'
 os.environ['TF_CUDNN_DETERMINISTIC'] = '1'
 
 import tensorflow as tf
-
-from morty.config import ConfigManager, main, get_arg_parser
+from morty.config import ConfigManager, get_arg_parser, main
 from morty.experiment import set_random_seed
 
-from rock_paper_scissors import get_model, get_test_dataset, get_dataset_stats, optimizer_factory
+from rock_paper_scissors import (
+    get_dataset_stats,
+    get_model,
+    get_test_dataset,
+    optimizer_factory,
+)
 
 # TF setup
 tf.get_logger().setLevel('ERROR')
@@ -49,6 +53,7 @@ def evaluate(config: ConfigManager) -> None:
         config.num_classes,
         config.image_size,
         config.l2_strength,
+        trainable_at=config.unfreeze_at,
     )
 
     model.load_weights(config.checkpoint_path)
@@ -68,7 +73,9 @@ def evaluate(config: ConfigManager) -> None:
     print("Test Loss: {}".format(test_loss))
     print("Test Accuracy: {}".format(test_accuracy))
 
-    model.save(f'./logs/models/rps-test_acc_{test_accuracy}-test_loss_{test_loss}.h5', save_format='h5')
+    model_path: str = f'./logs/models/rps-test_acc_{test_accuracy}-test_loss_{test_loss}.h5'
+    print('Saving model {} ..'.format(model_path))
+    model.save(model_path, save_format='h5')
 
 
 if __name__ == "__main__":

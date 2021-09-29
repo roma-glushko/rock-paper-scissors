@@ -7,16 +7,21 @@ os.environ['TF_DETERMINISTIC_OPS'] = '1'
 os.environ['TF_CUDNN_DETERMINISTIC'] = '1'
 
 import tensorflow as tf
-from tensorflow.python.keras.callbacks import ModelCheckpoint, EarlyStopping
-
+import wandb
 from morty.config import ConfigManager, main
 from morty.experiment import set_random_seed
-
-import wandb
+from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint
 from wandb.keras import WandbCallback
 
-from rock_paper_scissors import get_dataset, get_model, get_dataset_stats, get_test_dataset, optimizer_factory, \
-    class_names, log_confusion_matrix
+from rock_paper_scissors import (
+    class_names,
+    get_dataset,
+    get_dataset_stats,
+    get_model,
+    get_test_dataset,
+    log_confusion_matrix,
+    optimizer_factory,
+)
 
 # TF setup
 tf.get_logger().setLevel('ERROR')
@@ -59,7 +64,8 @@ def train(config: ConfigManager) -> None:
         config.feature_extractor,
         config.num_classes,
         config.image_size,
-        config.l2_strength,
+        l2_strength=config.l2_strength,
+        trainable_at=config.unfreeze_at,
     )
 
     optimizer = optimizer_factory.get(config.optimizer)(**config.optimizer_config)

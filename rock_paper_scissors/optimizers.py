@@ -1,5 +1,5 @@
 from morty.config import ComponentFactory
-from tensorflow.keras.optimizers import Adam, Nadam, RMSprop, SGD, Adagrad
+from tensorflow.keras.optimizers import SGD, Adagrad, Adam, Nadam, RMSprop
 from tensorflow_addons.optimizers import AdamW
 
 optimizer_factory: ComponentFactory = ComponentFactory('optimizer_factory')
