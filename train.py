@@ -2,9 +2,9 @@ import os
 import pickle
 import random
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-os.environ['TF_DETERMINISTIC_OPS'] = '1'
-os.environ['TF_CUDNN_DETERMINISTIC'] = '1'
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+os.environ["TF_DETERMINISTIC_OPS"] = "1"
+os.environ["TF_CUDNN_DETERMINISTIC"] = "1"
 
 import tensorflow as tf
 import wandb
@@ -24,26 +24,22 @@ from rock_paper_scissors import (
 )
 
 # TF setup
-tf.get_logger().setLevel('ERROR')
-gpus = tf.config.experimental.list_physical_devices('GPU')
+tf.get_logger().setLevel("ERROR")
+gpus = tf.config.experimental.list_physical_devices("GPU")
 tf.config.experimental.set_memory_growth(gpus[0], True)
 
-print('TF:', tf.__version__)
-print('Num GPUs Available: ', len(tf.config.list_physical_devices('GPU')))
+print("TF:", tf.__version__)
+print("Num GPUs Available: ", len(tf.config.list_physical_devices("GPU")))
 
-early_stopping = EarlyStopping(
-    patience=10,
-    min_delta=0.001,
-    restore_best_weights=True,
-)
+early_stopping = EarlyStopping(patience=10, min_delta=0.001, restore_best_weights=True,)
 
 
-@main(config_path='configs', config_name='basic_config')
+@main(config_path="configs", config_name="basic_config")
 def train(config: ConfigManager) -> None:
     random.seed(config.seed)
     set_random_seed(config.seed)
 
-    wandb.init(project='rock-paper-scissors', entity='roma-glushko', config=config)
+    wandb.init(project="rock-paper-scissors", entity="roma-glushko", config=config)
 
     train_dataset = get_dataset(
         config.train_dataset_path,
@@ -72,8 +68,8 @@ def train(config: ConfigManager) -> None:
 
     model.compile(
         optimizer=optimizer,
-        loss='sparse_categorical_crossentropy',
-        metrics=['accuracy'],
+        loss="sparse_categorical_crossentropy",
+        metrics=["accuracy"],
     )
 
     model.summary()
@@ -81,13 +77,15 @@ def train(config: ConfigManager) -> None:
     train_dataset_stats = get_dataset_stats(config.train_dataset_path)
     val_dataset_stats = get_dataset_stats(config.val_dataset_path)
 
-    steps_per_epoch = train_dataset_stats['total'] // config.batch_size
-    validation_steps = val_dataset_stats['total'] // config.batch_size
+    steps_per_epoch = train_dataset_stats["total"] // config.batch_size
+    validation_steps = val_dataset_stats["total"] // config.batch_size
 
     model_saver = ModelCheckpoint(
-        filepath='logs/checkpoints/rps-val_acc_{val_accuracy:.5f}' + f'-{config.feature_extractor}-seed_{config.seed}' + '-val_loss_{val_loss:.5f}-epoch_{epoch}.h5',
-        mode='max',
-        monitor='val_accuracy',
+        filepath="logs/checkpoints/rps-val_acc_{val_accuracy:.5f}"
+        + f"-{config.feature_extractor}-seed_{config.seed}"
+        + "-val_loss_{val_loss:.5f}-epoch_{epoch}.h5",
+        mode="max",
+        monitor="val_accuracy",
         save_best_only=True,
         save_weights_only=True,
         verbose=1,
@@ -102,12 +100,17 @@ def train(config: ConfigManager) -> None:
         callbacks=[
             model_saver,
             early_stopping,
-            WandbCallback(training_data=train_dataset, log_weights=True, log_gradients=True, data_type='image'),
+            WandbCallback(
+                training_data=train_dataset,
+                log_weights=True,
+                log_gradients=True,
+                data_type="image",
+            ),
         ],
-        verbose=1
+        verbose=1,
     )
 
-    with open('./logs/training_history.pkl', 'wb') as f:
+    with open("./logs/training_history.pkl", "wb") as f:
         pickle.dump(training_history.history, f)
 
     test_dataset = get_test_dataset(
@@ -125,10 +128,10 @@ def train(config: ConfigManager) -> None:
 
     test_loss, test_accuracy = model.evaluate(test_dataset)
 
-    wandb.log({'test_accuracy': test_accuracy})
-    wandb.log({'test_loss': test_loss})
+    wandb.log({"test_accuracy": test_accuracy})
+    wandb.log({"test_loss": test_loss})
 
-    log_confusion_matrix('test_confusion_matrix', model, test_dataset)
+    log_confusion_matrix("test_confusion_matrix", model, test_dataset)
 
 
 if __name__ == "__main__":

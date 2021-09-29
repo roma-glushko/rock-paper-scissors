@@ -13,13 +13,13 @@ from tensorflow.python.keras.preprocessing.image_dataset import (
 )
 
 class_names = (
-    'rock',
-    'paper',
-    'scissors',
+    "rock",
+    "paper",
+    "scissors",
 )
 
 
-def get_dataset_stats(dataset_path: str, image_pattern: str = '*.png') -> Dict:
+def get_dataset_stats(dataset_path: str, image_pattern: str = "*.png") -> Dict:
     total_samples = 0
     dataset_stats = {}
 
@@ -30,12 +30,17 @@ def get_dataset_stats(dataset_path: str, image_pattern: str = '*.png') -> Dict:
         dataset_stats[class_name] = num_images
         total_samples += num_images
 
-    dataset_stats['total'] = total_samples
+    dataset_stats["total"] = total_samples
 
     return dataset_stats
 
 
-def augment_image(inputs: tf.Tensor, labels: tf.Tensor, augmentation_pipeline: a.Compose, seed: int = 42):
+def augment_image(
+    inputs: tf.Tensor,
+    labels: tf.Tensor,
+    augmentation_pipeline: a.Compose,
+    seed: int = 42,
+):
     def apply_augmentation(images):
         random.seed(seed)
         np.random.seed(seed)
@@ -43,8 +48,8 @@ def augment_image(inputs: tf.Tensor, labels: tf.Tensor, augmentation_pipeline: a
         augmented_images = []
 
         for img in images:
-            aug_data = augmentation_pipeline(image=img.astype('uint8'))
-            augmented_images.append(aug_data['image'])
+            aug_data = augmentation_pipeline(image=img.astype("uint8"))
+            augmented_images.append(aug_data["image"])
 
         return np.stack(augmented_images)
 
@@ -57,21 +62,19 @@ def scale_images(inputs: tf.Tensor, labels: tf.Tensor):
     """
     Scale image batch between [-1; 1]
     """
-    return Rescaling(1. / 127.5, offset=-1)(inputs), labels
+    return Rescaling(1.0 / 127.5, offset=-1)(inputs), labels
 
 
 def get_dataset(
-        dataset_path: str,
-        augmentation_pipeline: a.Compose,
-        batch_size: int = 32,
-        image_size: Tuple[int, int] = (300, 300),
-        scaling: bool = True,
-        seed: int = 42
+    dataset_path: str,
+    augmentation_pipeline: a.Compose,
+    batch_size: int = 32,
+    image_size: Tuple[int, int] = (300, 300),
+    scaling: bool = True,
+    seed: int = 42,
 ) -> tf.data.Dataset:
     augmentation_func = partial(
-        augment_image,
-        augmentation_pipeline=augmentation_pipeline,
-        seed=seed,
+        augment_image, augmentation_pipeline=augmentation_pipeline, seed=seed,
     )
 
     dataset = image_dataset_from_directory(
@@ -87,17 +90,15 @@ def get_dataset(
     if scaling:
         dataset = dataset.map(scale_images, num_parallel_calls=AUTOTUNE)
 
-    return dataset \
-        .shuffle(buffer_size=512, seed=seed) \
-        .prefetch(AUTOTUNE)
+    return dataset.shuffle(buffer_size=512, seed=seed).prefetch(AUTOTUNE)
 
 
 def get_test_dataset(
-        dataset_path: str,
-        batch_size: int = 32,
-        image_size: Tuple[int, int] = (300, 300),
-        scaling: bool = True,
-        seed: int = 42
+    dataset_path: str,
+    batch_size: int = 32,
+    image_size: Tuple[int, int] = (300, 300),
+    scaling: bool = True,
+    seed: int = 42,
 ) -> tf.data.Dataset:
     dataset = image_dataset_from_directory(
         dataset_path,

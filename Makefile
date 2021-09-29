@@ -1,8 +1,11 @@
 flake:
-	flake8 ./
+	flake8 ./rock_paper_scissors ./*.py
 
 isort:
 	isort ./
+
+black:
+	black .
 
 mypy:
 	mypy ./

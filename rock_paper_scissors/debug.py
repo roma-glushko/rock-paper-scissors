@@ -19,10 +19,12 @@ def log_confusion_matrix(name: str, model: Model, dataset: tf.data.Dataset) -> N
         targets.append(label_batch.numpy())
         predictions.append(prediction_batch)
 
-    wandb.log({
-        name: wandb.plot.confusion_matrix(
-            y_true=np.concatenate(targets),
-            probs=np.concatenate(predictions),
-            class_names=class_names,
-        )
-    })
+    wandb.log(
+        {
+            name: wandb.plot.confusion_matrix(
+                y_true=np.concatenate(targets),
+                probs=np.concatenate(predictions),
+                class_names=class_names,
+            )
+        }
+    )
